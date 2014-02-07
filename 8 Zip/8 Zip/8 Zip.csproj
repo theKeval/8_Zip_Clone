@@ -110,6 +110,7 @@
     <Compile Include="Common\LayoutAwarePage.cs" />
     <Compile Include="Common\RichTextColumns.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="Converter\FileFolderToImageConverter.cs" />
     <Compile Include="ExtractHomePage.xaml.cs">
       <DependentUpon>ExtractHomePage.xaml</DependentUpon>
     </Compile>
@@ -131,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\File symbol.png" />
+    <Content Include="Assets\Folder symbol.png" />
     <Content Include="Assets\Logo.png" />
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />

@@ -88,8 +88,9 @@ namespace _8_Zip
                     
                     if (selectedFileFolder.isFolder)
                     {
-                        previousFolder.Add(openedFolder);
                         openedFolder = await openedFolder.GetFolderAsync(selectedFileFolder.name);
+                        previousFolder.Add(openedFolder);
+                        
                         parameterContent.Clear();
 
                         foreach (var item in await openedFolder.GetFoldersAsync())
@@ -340,6 +341,13 @@ namespace _8_Zip
                 BtnGoUp.IsEnabled = false;
             }
 
+        }
+
+        protected override void GoBack(object sender, RoutedEventArgs e)
+        {
+            base.GoBack(sender, e);
+
+            previousFolder.Clear();
         }
 
     }

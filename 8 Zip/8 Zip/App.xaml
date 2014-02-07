@@ -2,6 +2,7 @@
     x:Class="_8_Zip.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="using:_8_Zip.Converter"
     xmlns:local="using:_8_Zip">
 
     <Application.Resources>
@@ -15,6 +16,7 @@
                 <ResourceDictionary Source="Common/StandardStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
+            <converter:FileFolderToImageConverter x:Key="FileFolderToImageSourceConverter" />
 
             <Style x:Key="myGridViewItem" TargetType="GridViewItem">
                 <Setter Property="FontFamily" Value="{StaticResource ContentControlThemeFontFamily}" />

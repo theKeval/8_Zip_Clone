@@ -69,7 +69,8 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Background="#FF2A2A2A" Width="400" >
                         <!--Tapped="OpenArchiveTapped_sp"-->
-                        <Image Height="90" Width="90" Source="Assets/File symbol.png" Stretch="None" />
+                        <Image Height="90" Width="90" Source="{Binding Converter={StaticResource FileFolderToImageSourceConverter}}" Stretch="None" />
+                        <!--Source="Assets/File symbol.png"-->
                         <StackPanel Orientation="Vertical" Margin="20,0" 
                             VerticalAlignment="Center" HorizontalAlignment="Center">
                             <TextBlock Text="{Binding name}" TextTrimming="WordEllipsis" FontSize="20" Width="250" />
