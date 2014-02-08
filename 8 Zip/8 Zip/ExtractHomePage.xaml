@@ -88,7 +88,7 @@
         </GridView>
 
 
-        <control:BusyBar x:Name="isBusy" IsBusy="False" Grid.RowSpan="2" />
+        <control:BusyBar x:Name="isBusy" IsBusy="False" Grid.RowSpan="3" />
         <Grid Margin="120,0,0,0" Grid.Row="1">
             <StackPanel HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" Orientation="Horizontal">
                 <!--<TextBlock HorizontalAlignment="Left" Margin="0" TextWrapping="Wrap" Text="Go Up" VerticalAlignment="Center" FontSize="36"/>-->
