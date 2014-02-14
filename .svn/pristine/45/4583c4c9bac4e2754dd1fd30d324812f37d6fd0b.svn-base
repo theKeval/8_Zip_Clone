@@ -1,6 +1,5 @@
 ﻿using _8_Zip.Helper;
 using SharpCompress.Reader;
-using SharpCompress.Reader.GZip;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -81,18 +80,11 @@ namespace _8_Zip
 
                 if (abc != null)
                 {
-                    if (abc.FileType != ".gz")
-                    {
-                        //await extractCompressedFile_ArchiveFactory(abc);
+                    //await extractCompressedFile_ArchiveFactory(abc);
 
-                        //await extractCompressedFile_ReaderFactory(abc, xyz);
+                    //await extractCompressedFile_ReaderFactory(abc, xyz);
 
-                        await extractInLocalFolder_ReaderFactory(abc);
-                    }
-                    else if (abc.FileType == ".gz")
-                    {
-                        await extractInLocalFolder_GZipReader(abc);
-                    }
+                    await extractInLocalFolder_ReaderFactory(abc);
                 }
                 
 
@@ -289,148 +281,150 @@ namespace _8_Zip
 
                 var Reader = ReaderFactory.Open(fileStream);
                 RootFolderName = sourceCompressedFile.DisplayName;
-                StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(sourceCompressedFile.DisplayName, CreationCollisionOption.ReplaceExisting);
+                StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(sourceCompressedFile.DisplayName, CreationCollisionOption.OpenIfExists);
 
 
-                //List<string> lstFileName = new List<string>();
-                //while (Reader.MoveToNextEntry())
-                //{
-                //    lstFileName.Add(Reader.Entry.FilePath);
-                //}
-
+                List<string> lstFileName = new List<string>();
                 while (Reader.MoveToNextEntry())
                 {
-                    #region while for every entry
-
-                    selectedFolder = folder;
-                    if (!Reader.Entry.IsDirectory)
-                    {
-                        if (Reader.Entry.FilePath.Contains("/"))
-                        {
-                            string[] splitedPath = Reader.Entry.FilePath.Split('/');
-                            string FileName = splitedPath[(splitedPath.Count() - 1)];
-
-                            foreach (var item in splitedPath)
-                            {
-                                if (item == splitedPath.First() && !(item == splitedPath.Last()))
-                                {
-                                    StorageFolder sf = await selectedFolder.CreateFolderAsync(item, CreationCollisionOption.OpenIfExists);
-                                    selectedFolder = sf;
-                                }
-                                else if (!(item == splitedPath.Last()))
-                                {
-                                    StorageFolder sf1 = await selectedFolder.CreateFolderAsync(item, CreationCollisionOption.OpenIfExists);
-                                    selectedFolder = sf1;
-                                    //StorageFolder sf1 = await sf.createfol
-                                }
-                                else if (item == splitedPath.Last())
-                                {
-                                    StorageFile file = await selectedFolder.CreateFileAsync(FileName, CreationCollisionOption.OpenIfExists);
-
-                                    #region for writing in file - commented
-                                    //Stream newFileStream = await file.OpenStreamForWriteAsync();
-
-                                    //MemoryStream streamEntry = new MemoryStream();
-                                    //Reader.WriteEntryTo(streamEntry);
-                                    ////entry.WriteTo(streamEntry);
-                                    //// buffer for extraction data
-                                    //byte[] data = streamEntry.ToArray();
-
-                                    //newFileStream.Write(data, 0, data.Length);
-                                    //newFileStream.Flush();
-                                    //newFileStream.Dispose();
-                                    #endregion
-                                }
-                            }
-                        }
-                        else
-                        {
-                            StorageFile file = await selectedFolder.CreateFileAsync(Reader.Entry.FilePath, CreationCollisionOption.OpenIfExists);
-
-                            #region for writing in file - commented
-                            //Stream newFileStream = await file.OpenStreamForWriteAsync();
-
-                            //MemoryStream streamEntry = new MemoryStream();
-                            //Reader.WriteEntryTo(streamEntry);
-                            ////entry.WriteTo(streamEntry);
-                            //// buffer for extraction data
-                            //byte[] data = streamEntry.ToArray();
-
-                            //newFileStream.Write(data, 0, data.Length);
-                            //newFileStream.Flush();
-                            //newFileStream.Dispose();
-                            #endregion
-                        }
-                        #region commented old code
-                        //StorageFile newFile = await folder.CreateFileAsync(Reader.Entry.FilePath, CreationCollisionOption.FailIfExists);
-                        //Stream newFileStream = await newFile.OpenStreamForWriteAsync();
-
-                        //MemoryStream streamEntry = new MemoryStream();
-                        //Reader.WriteEntryTo(streamEntry);
-                        ////entry.WriteTo(streamEntry);
-                        //// buffer for extraction data
-                        //byte[] data = streamEntry.ToArray();
-
-                        //newFileStream.Write(data, 0, data.Length);
-                        //newFileStream.Flush();
-                        //newFileStream.Dispose();
-                        #endregion
-                    }
-                    else if (Reader.Entry.IsDirectory)
-                    {
-                        if (Reader.Entry.FilePath.Contains("/"))
-                        {
-                            string[] splitedPathWithBlank = Reader.Entry.FilePath.Split('/');
-                            string FolderName = splitedPathWithBlank[splitedPathWithBlank.Length - 2];    // can also be written as splitedPath[splitedPath.count() - 2]
-                            List<string> splitedPath = new List<string>();
-                            List<string> splitedPathFinal = new List<string>();
-
-                            foreach (var item in splitedPathWithBlank)
-                            {
-                                if (!(item == splitedPathWithBlank.Last()))
-                                {
-                                    splitedPath.Add(item);
-                                }
-                            }
-
-                            var i = 1;
-                            foreach (var item in splitedPath)
-                            {
-                                if (!(i == splitedPath.Count()))
-                                {
-                                    splitedPathFinal.Add(item);
-                                    //item = item + ".last";
-                                }
-                                else
-                                {
-                                    splitedPathFinal.Add(item + ".last");
-                                }
-                                i++;
-                            }
-
-                            foreach (var item in splitedPathFinal)
-                            {
-                                if (item == splitedPathFinal.First() && item != splitedPathFinal.Last())
-                                {
-                                    StorageFolder sf = await selectedFolder.CreateFolderAsync(item, CreationCollisionOption.OpenIfExists);
-                                    selectedFolder = sf;
-                                }
-                                else if (item != splitedPathFinal.Last())
-                                {
-                                    StorageFolder sf1 = await selectedFolder.CreateFolderAsync(item, CreationCollisionOption.OpenIfExists);
-                                    selectedFolder = sf1;
-                                }
-                                else if (item == splitedPathFinal.Last())
-                                {
-                                    StorageFolder sfLast = await selectedFolder.CreateFolderAsync(FolderName, CreationCollisionOption.OpenIfExists);
-                                }
-                            }
-                        }
-
-                        //StorageFolder newFolder = await folder.CreateFolderAsync(Reader.Entry.FilePath, CreationCollisionOption.ReplaceExisting);
-                    }
-                    #endregion
+                    lstFileName.Add(Reader.Entry.FilePath);
                 }
+
+
+                #region while for every entry
+
+                //while (Reader.MoveToNextEntry())
+                //{
+                //    selectedFolder = folder;
+                //    if (!Reader.Entry.IsDirectory)
+                //    {
+                //        if (Reader.Entry.FilePath.Contains("/"))
+                //        {
+                //            string[] splitedPath = Reader.Entry.FilePath.Split('/');
+                //            string FileName = splitedPath[(splitedPath.Count() - 1)];
+
+                //            foreach (var item in splitedPath)
+                //            {
+                //                if (item == splitedPath.First() && !(item == splitedPath.Last()))
+                //                {
+                //                    StorageFolder sf = await selectedFolder.CreateFolderAsync(item, CreationCollisionOption.OpenIfExists);
+                //                    selectedFolder = sf;
+                //                }
+                //                else if (!(item == splitedPath.Last()))
+                //                {
+                //                    StorageFolder sf1 = await selectedFolder.CreateFolderAsync(item, CreationCollisionOption.OpenIfExists);
+                //                    selectedFolder = sf1;
+                //                    //StorageFolder sf1 = await sf.createfol
+                //                }
+                //                else if (item == splitedPath.Last())
+                //                {
+                //                    StorageFile file = await selectedFolder.CreateFileAsync(FileName, CreationCollisionOption.OpenIfExists);
+
+                //                    #region for writing in file - commented
+                //                    //Stream newFileStream = await file.OpenStreamForWriteAsync();
+
+                //                    //MemoryStream streamEntry = new MemoryStream();
+                //                    //Reader.WriteEntryTo(streamEntry);
+                //                    ////entry.WriteTo(streamEntry);
+                //                    //// buffer for extraction data
+                //                    //byte[] data = streamEntry.ToArray();
+
+                //                    //newFileStream.Write(data, 0, data.Length);
+                //                    //newFileStream.Flush();
+                //                    //newFileStream.Dispose();
+                //                    #endregion
+                //                }
+                //            }
+                //        }
+                //        else
+                //        {
+                //            StorageFile file = await selectedFolder.CreateFileAsync(Reader.Entry.FilePath, CreationCollisionOption.OpenIfExists);
+
+                //            #region for writing in file - commented
+                //            //Stream newFileStream = await file.OpenStreamForWriteAsync();
+
+                //            //MemoryStream streamEntry = new MemoryStream();
+                //            //Reader.WriteEntryTo(streamEntry);
+                //            ////entry.WriteTo(streamEntry);
+                //            //// buffer for extraction data
+                //            //byte[] data = streamEntry.ToArray();
+
+                //            //newFileStream.Write(data, 0, data.Length);
+                //            //newFileStream.Flush();
+                //            //newFileStream.Dispose();
+                //            #endregion
+                //        }
+                //        #region commented old code
+                //        //StorageFile newFile = await folder.CreateFileAsync(Reader.Entry.FilePath, CreationCollisionOption.FailIfExists);
+                //        //Stream newFileStream = await newFile.OpenStreamForWriteAsync();
+
+                //        //MemoryStream streamEntry = new MemoryStream();
+                //        //Reader.WriteEntryTo(streamEntry);
+                //        ////entry.WriteTo(streamEntry);
+                //        //// buffer for extraction data
+                //        //byte[] data = streamEntry.ToArray();
+
+                //        //newFileStream.Write(data, 0, data.Length);
+                //        //newFileStream.Flush();
+                //        //newFileStream.Dispose();
+                //        #endregion
+                //    }
+                //    else if (Reader.Entry.IsDirectory)
+                //    {
+                //        if (Reader.Entry.FilePath.Contains("/"))
+                //        {
+                //            string[] splitedPathWithBlank = Reader.Entry.FilePath.Split('/');
+                //            string FolderName = splitedPathWithBlank[splitedPathWithBlank.Length - 2];    // can also be written as splitedPath[splitedPath.count() - 2]
+                //            List<string> splitedPath = new List<string>();
+                //            List<string> splitedPathFinal = new List<string>();
+
+                //            foreach (var item in splitedPathWithBlank)
+                //            {
+                //                if (!(item == splitedPathWithBlank.Last()))
+                //                {
+                //                    splitedPath.Add(item);
+                //                }
+                //            }
+
+                //            var i = 1;
+                //            foreach (var item in splitedPath)
+                //            {
+                //                if (!(i == splitedPath.Count()))
+                //                {
+                //                    splitedPathFinal.Add(item);
+                //                    //item = item + ".last";
+                //                }
+                //                else
+                //                {
+                //                    splitedPathFinal.Add(item + ".last");
+                //                }
+                //                i++;
+                //            }
+
+                //            foreach (var item in splitedPathFinal)
+                //            {
+                //                if (item == splitedPathFinal.First() && item != splitedPathFinal.Last())
+                //                {
+                //                    StorageFolder sf = await selectedFolder.CreateFolderAsync(item, CreationCollisionOption.OpenIfExists);
+                //                    selectedFolder = sf;
+                //                }
+                //                else if (item != splitedPathFinal.Last())
+                //                {
+                //                    StorageFolder sf1 = await selectedFolder.CreateFolderAsync(item, CreationCollisionOption.OpenIfExists);
+                //                    selectedFolder = sf1;
+                //                }
+                //                else if (item == splitedPathFinal.Last())
+                //                {
+                //                    StorageFolder sfLast = await selectedFolder.CreateFolderAsync(FolderName, CreationCollisionOption.OpenIfExists);
+                //                }
+                //            }
+                //        }
+
+                //        //StorageFolder newFolder = await folder.CreateFolderAsync(Reader.Entry.FilePath, CreationCollisionOption.ReplaceExisting);
+                //    }
+                //}
+
+                #endregion
 
                 #endregion
 
@@ -461,45 +455,6 @@ namespace _8_Zip
 
         }
 
-        private async Task extractInLocalFolder_GZipReader(StorageFile sourceCompressedFile)
-        {
-            using (Stream fileStream = await sourceCompressedFile.OpenStreamForReadAsync())
-            {
-                var gZipReader = GZipReader.Open(fileStream);
-                RootFolderName = sourceCompressedFile.DisplayName;
-                StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(sourceCompressedFile.DisplayName, CreationCollisionOption.ReplaceExisting);
-
-                while (gZipReader.MoveToNextEntry())
-                {
-                    selectedFolder = folder;
-                    {
-                        StorageFile file = await selectedFolder.CreateFileAsync(gZipReader.Entry.FilePath, CreationCollisionOption.OpenIfExists);
-                    }
-                }
-
-                RootFolder = await ApplicationData.Current.LocalFolder.GetFolderAsync(RootFolderName);
-                foreach (var item in await RootFolder.GetFoldersAsync())
-                {
-                    OC_content.Add(new FileFolderModel
-                    {
-                        name = item.Name,
-                        isFolder = true
-                    });
-                }
-
-                foreach (var item in await RootFolder.GetFilesAsync())
-                {
-                    OC_content.Add(new FileFolderModel
-                    {
-                        name = item.Name,
-                        isFolder = false
-                    });
-                }
-
-                this.Frame.Navigate(typeof(ExtractHomePage), OC_content);
-
-            }
-        }
 
     }
 }

@@ -139,35 +139,16 @@ namespace _8_Zip
 
                         var OC_selectedFiles = await FilesPicker.PickMultipleFilesAsync();
 
-                        if (OC_selectedFiles.Count != 0)
+                        using (var zipWriter = WriterFactory.Open(zipStream, archiveType, CompressionType.None))  //(zip, archiveType, CompressionType.None))
                         {
-                            if (archiveType != ArchiveType.Tar)
+                            foreach (var singleFile in OC_selectedFiles)
                             {
-                                using (var zipWriter = WriterFactory.Open(zipStream, archiveType, CompressionType.Deflate))  //(zip, archiveType, CompressionType.None))
-                                {
-                                    foreach (var singleFile in OC_selectedFiles)
-                                    {
 
-                                        zipWriter.Write(singleFile.Name, await singleFile.OpenStreamForReadAsync());
-
-                                        //zipWriter.Write(singleFile.Name, singleFile.OpenStreamForReadAsync);
-                                        //zipWriter.Write(Path.GetFileName(file), filePath);
-                                    }
-                                }
+                                zipWriter.Write(singleFile.Name, await singleFile.OpenStreamForReadAsync());
+                                
+                                //zipWriter.Write(singleFile.Name, singleFile.OpenStreamForReadAsync);
+                                //zipWriter.Write(Path.GetFileName(file), filePath);
                             }
-                            else if (archiveType == ArchiveType.Tar)
-                            {
-                                using (var tarWriter = WriterFactory.Open(zipStream, archiveType, CompressionType.None))
-                                {
-                                    foreach (var singleFile in OC_selectedFiles)
-                                    {
-                                        tarWriter.Write(singleFile.Name, await singleFile.OpenStreamForReadAsync());
-                                    }
-                                }
-                            }
-
-                            isBusy.IsBusy = false;
-                            this.Frame.Navigate(typeof(HomePage));
                         }
                     }
                     else if (archiveType == ArchiveType.GZip)
@@ -179,15 +160,9 @@ namespace _8_Zip
 
                         var selectedFile = await filePicker.PickSingleFileAsync();
 
-                        if (selectedFile != null)
+                        using (GZipWriter writer = new GZipWriter(zipStream))
                         {
-                            using (GZipWriter writer = new GZipWriter(zipStream))
-                            {
-                                writer.Write(selectedFile.Name, await selectedFile.OpenStreamForReadAsync());
-                            }
-
-                            isBusy.IsBusy = false;
-                            this.Frame.Navigate(typeof(HomePage));
+                            writer.Write(selectedFile.Name, await selectedFile.OpenStreamForReadAsync());
                         }
 
                         #region commented - tries
@@ -205,23 +180,24 @@ namespace _8_Zip
                         //}
                         #endregion
                     }
+
                 }
             }
             catch (Exception ex)
             {
-                isBusy.IsBusy = false;
-
                 MessageDialog ms = new MessageDialog(ex.Message);
                 ms.ShowAsync();
             }
-            finally
-            {
-                isBusy.IsBusy = false;
-            }
+
+            isBusy.IsBusy = false;
+            this.Frame.Navigate(typeof(HomePage));
+
         }
 
         private async void Btn_AddFolder_Tapped(object sender, TappedRoutedEventArgs e)
         {
+
+
             isBusy.IsBusy = true;
 
             try
@@ -254,6 +230,13 @@ namespace _8_Zip
 
                     if (archiveType != ArchiveType.GZip)
                     {
+                        //var FilesPicker = new FileOpenPicker();
+                        //FilesPicker.CommitButtonText = "Compress";
+                        //FilesPicker.FileTypeFilter.Add("*");
+                        //FilesPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+
+                        //var OC_selectedFiles = await FilesPicker.PickMultipleFilesAsync();
+
                         var folderPicker = new FolderPicker();
                         folderPicker.CommitButtonText = "select folder";
                         folderPicker.FileTypeFilter.Add("*");
@@ -261,76 +244,49 @@ namespace _8_Zip
 
                         var selectedFolder = await folderPicker.PickSingleFolderAsync();
 
-                        if (selectedFolder != null)
+                        using (var zipWriter = WriterFactory.Open(zip, archiveType, CompressionType.None))  //(zip, archiveType, CompressionType.None))
                         {
                             string[] splitedPathOfFolder = selectedFolder.Path.Split('\\');
                             int folderNameLenght = splitedPathOfFolder.Last().Length;
                             int selectedFolderPathLenght = selectedFolder.Path.Length;
                             int substringLenght = selectedFolderPathLenght - folderNameLenght;
 
-                            if (archiveType != ArchiveType.Tar)
+                            foreach (var singleFile in await selectedFolder.GetFilesAsync(CommonFileQuery.OrderByName))
                             {
-                                using (var zipWriter = WriterFactory.Open(zip, archiveType, CompressionType.Deflate))  //(zip, archiveType, CompressionType.None))
-                                {
-                                    foreach (var singleFile in await selectedFolder.GetFilesAsync(CommonFileQuery.OrderByName))
-                                    {
-                                        string subStringToConsider = singleFile.Path.Substring(substringLenght - 1);
+                                string subStringToConsider = singleFile.Path.Substring(substringLenght - 1);
 
-                                        zipWriter.Write(subStringToConsider, await singleFile.OpenStreamForReadAsync());
-                                        //zipWriter.Write(singleFile.Name, singleFile.OpenStreamForReadAsync);
-                                        //zipWriter.Write(Path.GetFileName(file), filePath);
-                                    }
-                                }
+                                zipWriter.Write(subStringToConsider, await singleFile.OpenStreamForReadAsync());
+                                //zipWriter.Write(singleFile.Name, singleFile.OpenStreamForReadAsync);
+                                //zipWriter.Write(Path.GetFileName(file), filePath);
                             }
-                            else if (archiveType == ArchiveType.Tar)
-                            {
-                                using (var zipWriter = WriterFactory.Open(zip, archiveType, CompressionType.None))  //(zip, archiveType, CompressionType.None))
-                                {
-                                    foreach (var singleFile in await selectedFolder.GetFilesAsync(CommonFileQuery.OrderByName))
-                                    {
-                                        string subStringToConsider = singleFile.Path.Substring(substringLenght - 1);
+                        }
+                    }
+                    else if (archiveType == ArchiveType.GZip)
+                    {
+                        var filePicker = new FileOpenPicker();
+                        filePicker.CommitButtonText = "Compress";
+                        filePicker.FileTypeFilter.Add("*");
+                        filePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
 
-                                        zipWriter.Write(subStringToConsider, await singleFile.OpenStreamForReadAsync());
-                                        //zipWriter.Write(singleFile.Name, singleFile.OpenStreamForReadAsync);
-                                        //zipWriter.Write(Path.GetFileName(file), filePath);
-                                    }
-                                }
-                            }
+                        var selectedFile = await filePicker.PickSingleFileAsync();
 
-                            isBusy.IsBusy = false;
-                            this.Frame.Navigate(typeof(HomePage));
+                        using (GZipWriter writer = new GZipWriter(zip))
+                        {
+                            writer.Write(selectedFile.Name, await selectedFile.OpenStreamForReadAsync());
                         }
                     }
 
-                    #region GZip can not contain folder - commented
-                    //else if (archiveType == ArchiveType.GZip)
-                    //{
-                    //    var filePicker = new FileOpenPicker();
-                    //    filePicker.CommitButtonText = "Compress";
-                    //    filePicker.FileTypeFilter.Add("*");
-                    //    filePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
-
-                    //    var selectedFile = await filePicker.PickSingleFileAsync();
-
-                    //    using (GZipWriter writer = new GZipWriter(zip))
-                    //    {
-                    //        writer.Write(selectedFile.Name, await selectedFile.OpenStreamForReadAsync());
-                    //    }
-                    //}
-                    #endregion
                 }
             }
             catch (Exception ex)
             {
-                isBusy.IsBusy = false;
-
                 MessageDialog ms = new MessageDialog(ex.Message);
                 ms.ShowAsync();
             }
-            finally
-            {
-                isBusy.IsBusy = false;
-            }
+
+            isBusy.IsBusy = false;
+            this.Frame.Navigate(typeof(HomePage));
+
         }
 
     }

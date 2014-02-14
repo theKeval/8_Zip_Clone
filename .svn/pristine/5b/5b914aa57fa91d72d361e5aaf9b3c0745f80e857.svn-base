@@ -1,6 +1,5 @@
 ﻿using _8_Zip.Helper;
 using SharpCompress.Reader;
-using SharpCompress.Reader.GZip;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -81,18 +80,11 @@ namespace _8_Zip
 
                 if (abc != null)
                 {
-                    if (abc.FileType != ".gz")
-                    {
-                        //await extractCompressedFile_ArchiveFactory(abc);
+                    //await extractCompressedFile_ArchiveFactory(abc);
 
-                        //await extractCompressedFile_ReaderFactory(abc, xyz);
+                    //await extractCompressedFile_ReaderFactory(abc, xyz);
 
-                        await extractInLocalFolder_ReaderFactory(abc);
-                    }
-                    else if (abc.FileType == ".gz")
-                    {
-                        await extractInLocalFolder_GZipReader(abc);
-                    }
+                    await extractInLocalFolder_ReaderFactory(abc);
                 }
                 
 
@@ -289,7 +281,7 @@ namespace _8_Zip
 
                 var Reader = ReaderFactory.Open(fileStream);
                 RootFolderName = sourceCompressedFile.DisplayName;
-                StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(sourceCompressedFile.DisplayName, CreationCollisionOption.ReplaceExisting);
+                StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(sourceCompressedFile.DisplayName, CreationCollisionOption.OpenIfExists);
 
 
                 //List<string> lstFileName = new List<string>();
@@ -298,10 +290,11 @@ namespace _8_Zip
                 //    lstFileName.Add(Reader.Entry.FilePath);
                 //}
 
+
+                #region while for every entry
+
                 while (Reader.MoveToNextEntry())
                 {
-                    #region while for every entry
-
                     selectedFolder = folder;
                     if (!Reader.Entry.IsDirectory)
                     {
@@ -429,8 +422,9 @@ namespace _8_Zip
 
                         //StorageFolder newFolder = await folder.CreateFolderAsync(Reader.Entry.FilePath, CreationCollisionOption.ReplaceExisting);
                     }
-                    #endregion
                 }
+
+                #endregion
 
                 #endregion
 
@@ -461,45 +455,6 @@ namespace _8_Zip
 
         }
 
-        private async Task extractInLocalFolder_GZipReader(StorageFile sourceCompressedFile)
-        {
-            using (Stream fileStream = await sourceCompressedFile.OpenStreamForReadAsync())
-            {
-                var gZipReader = GZipReader.Open(fileStream);
-                RootFolderName = sourceCompressedFile.DisplayName;
-                StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(sourceCompressedFile.DisplayName, CreationCollisionOption.ReplaceExisting);
-
-                while (gZipReader.MoveToNextEntry())
-                {
-                    selectedFolder = folder;
-                    {
-                        StorageFile file = await selectedFolder.CreateFileAsync(gZipReader.Entry.FilePath, CreationCollisionOption.OpenIfExists);
-                    }
-                }
-
-                RootFolder = await ApplicationData.Current.LocalFolder.GetFolderAsync(RootFolderName);
-                foreach (var item in await RootFolder.GetFoldersAsync())
-                {
-                    OC_content.Add(new FileFolderModel
-                    {
-                        name = item.Name,
-                        isFolder = true
-                    });
-                }
-
-                foreach (var item in await RootFolder.GetFilesAsync())
-                {
-                    OC_content.Add(new FileFolderModel
-                    {
-                        name = item.Name,
-                        isFolder = false
-                    });
-                }
-
-                this.Frame.Navigate(typeof(ExtractHomePage), OC_content);
-
-            }
-        }
 
     }
 }

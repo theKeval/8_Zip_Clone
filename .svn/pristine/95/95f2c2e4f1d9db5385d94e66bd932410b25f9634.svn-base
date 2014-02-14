@@ -1,6 +1,5 @@
 ﻿using _8_Zip.Helper;
 using SharpCompress.Reader;
-using SharpCompress.Reader.GZip;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -138,23 +137,16 @@ namespace _8_Zip
 
                 var folderPicker = new FolderPicker();
                 folderPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
-                folderPicker.FileTypeFilter.Add("*");
-                //folderPicker.FileTypeFilter.Add(".jpg");
-                //folderPicker.FileTypeFilter.Add(".txt");
-                //folderPicker.FileTypeFilter.Add(".zip");
-                //folderPicker.FileTypeFilter.Add(".rar");
+                folderPicker.FileTypeFilter.Add(".png");
+                folderPicker.FileTypeFilter.Add(".jpg");
+                folderPicker.FileTypeFilter.Add(".txt");
+                folderPicker.FileTypeFilter.Add(".zip");
+                folderPicker.FileTypeFilter.Add(".rar");
                 StorageFolder xyz = await folderPicker.PickSingleFolderAsync();
 
                 StorageFile abc = HomePage.abc;
 
-                if (abc.FileType != ".gz")
-                {
-                    await extractCompressedFile_ReaderFactory(abc, xyz);
-                }
-                else if(abc.FileType == ".gz")
-                {
-                    await extractCompressedFile_GZipReader(abc, xyz);
-                }
+                await extractCompressedFile_ReaderFactory(abc, xyz);
 
                 isBusy.IsBusy = false;
             }
@@ -177,7 +169,7 @@ namespace _8_Zip
             using (Stream fileStream = await sourceCompressedFile.OpenStreamForReadAsync())
             {
                 var Reader = ReaderFactory.Open(fileStream);
-                StorageFolder folder = await destinationFolder.CreateFolderAsync(sourceCompressedFile.DisplayName, CreationCollisionOption.ReplaceExisting);
+                StorageFolder folder = await destinationFolder.CreateFolderAsync(sourceCompressedFile.DisplayName, CreationCollisionOption.OpenIfExists);
 
                 //foreach (var entry in archive.Entries)
                 while (Reader.MoveToNextEntry())
@@ -307,32 +299,6 @@ namespace _8_Zip
             }
         }
 
-        private async Task extractCompressedFile_GZipReader(StorageFile sourceCompressedFile, StorageFolder destinationFolder)
-        {
-            using (Stream fileStream = await sourceCompressedFile.OpenStreamForReadAsync())
-            {
-                var gZipReader = GZipReader.Open(fileStream);
-                StorageFolder folder = await destinationFolder.CreateFolderAsync(sourceCompressedFile.DisplayName, CreationCollisionOption.GenerateUniqueName);
-
-                while (gZipReader.MoveToNextEntry())
-                {
-                    selectedFolder = folder;
-
-                    StorageFile file = await selectedFolder.CreateFileAsync(gZipReader.Entry.FilePath, CreationCollisionOption.OpenIfExists);
-                    Stream newFileStream = await file.OpenStreamForWriteAsync();
-
-                    MemoryStream streamEntry = new MemoryStream();
-                    gZipReader.WriteEntryTo(streamEntry);
-                    //entry.WriteTo(streamEntry);
-                    // buffer for extraction data
-                    byte[] data = streamEntry.ToArray();
-
-                    newFileStream.Write(data, 0, data.Length);
-                    newFileStream.Flush();
-                    newFileStream.Dispose();
-                }
-            }
-        }
 
         private async void BtnGoUp_Tapped(object sender, TappedRoutedEventArgs e)
         {
