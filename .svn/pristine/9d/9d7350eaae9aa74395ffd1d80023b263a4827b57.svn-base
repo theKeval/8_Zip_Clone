@@ -9,7 +9,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:control="using:_8_Zip.UserControls"
-    xmlns:callisto="using:Callisto.Controls"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -23,7 +22,7 @@
         * Row 0 contains the back button and page title
         * Row 1 contains the rest of the page layout
     -->
-
+    
     <Grid Style="{StaticResource LayoutRootStyle}">
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>
@@ -43,7 +42,7 @@
         </Grid>
 
         <GridView x:Name="gridView" Grid.Row="1" Margin="100 0 0 0" Padding="10" SelectionMode="None">
-
+            
             <StackPanel Orientation="Horizontal" Background="#FF2A2A2A" Width="400" Tapped="OpenArchiveTapped_sp">
                 <Image Height="90" Width="90" Source="Assets/File symbol.png" Stretch="None" />
                 <StackPanel Orientation="Vertical" Margin="20,0" 
@@ -63,31 +62,15 @@
             </StackPanel>
 
         </GridView>
-
-
-
+        
         <control:BusyBar x:Name="isBusy" IsBusy="False" Grid.RowSpan="2" />
-
-        <callisto:CustomDialog x:FieldModifier="public" x:Name="CustomDialogForpassword" 
-                               Title="Enter Password" 
-                               Background="Teal" BackButtonVisibility="Visible" BackButtonClicked="CustomDialogForpassword_BackButtonClicked" Grid.RowSpan="2">
-            <StackPanel>
-                <TextBlock Margin="0,0,0,8" FontSize="14.6667" FontWeight="SemiLight" TextWrapping="Wrap"
-                           Text="The archive you want to open is password protected. Please Enter password." />
-                <callisto:WatermarkTextBox x:Name="tBox_password" HorizontalAlignment="Left" Watermark="Password" Width="400" Height="35" />
-                <StackPanel Margin="0,20,0,0" HorizontalAlignment="Right" Orientation="Horizontal">
-                    <Button Content="OK" Width="90" Margin="0,0,20,0" Click="btnPassOK_Click" />
-                    <Button Content="CANCEL" Width="90" Click="DialogCancelClicked" />
-                </StackPanel>
-            </StackPanel>
-        </callisto:CustomDialog>
         
         <Grid x:Name="Snapped_Header" Visibility="Collapsed">
-            <TextBlock x:Name="pageTitle_Copy" Text="8 Zip Clone" 
+        	<TextBlock x:Name="pageTitle_Copy" Text="8 Zip Clone" 
         		Style="{StaticResource PageHeaderTextStyle}" HorizontalAlignment="Center" 
         		VerticalAlignment="Bottom" Margin="0,0,0,30" FontSize="40"/>
         </Grid>
-
+        
         <!--<ListView x:Name="Snapped_ListView" Grid.Row="1" Visibility="Collapsed"
                   SelectionMode="None" Padding="10">
             
@@ -115,48 +98,48 @@
 
             <!-- Visual states reflect the application's view state -->
             <VisualStateGroup x:Name="ApplicationViewStates">
-                <VisualState x:Name="FullScreenLandscape"/>
-                <VisualState x:Name="Filled"/>
+        		<VisualState x:Name="FullScreenLandscape"/>
+        		<VisualState x:Name="Filled"/>
 
                 <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
-                <VisualState x:Name="FullScreenPortrait">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitBackButtonStyle}"/>
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
-                </VisualState>
+        		<VisualState x:Name="FullScreenPortrait">
+        			<Storyboard>
+        				<ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+        					<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitBackButtonStyle}"/>
+        				</ObjectAnimationUsingKeyFrames>
+        			</Storyboard>
+        		</VisualState>
 
                 <!-- The back button and title have different styles when snapped -->
-                <VisualState x:Name="Snapped">
-                    <Storyboard>
+        		<VisualState x:Name="Snapped">
+        			<Storyboard>
                         <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}"/>
                         </ObjectAnimationUsingKeyFrames>-->
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="grid">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Collapsed</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="gridView">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Collapsed</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Snapped_Header">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Visible</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
+        				<ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
+        					<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
+        				</ObjectAnimationUsingKeyFrames>
+        				<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="grid">
+        					<DiscreteObjectKeyFrame KeyTime="0">
+        						<DiscreteObjectKeyFrame.Value>
+        							<Visibility>Collapsed</Visibility>
+        						</DiscreteObjectKeyFrame.Value>
+        					</DiscreteObjectKeyFrame>
+        				</ObjectAnimationUsingKeyFrames>
+        				<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="gridView">
+        					<DiscreteObjectKeyFrame KeyTime="0">
+        						<DiscreteObjectKeyFrame.Value>
+        							<Visibility>Collapsed</Visibility>
+        						</DiscreteObjectKeyFrame.Value>
+        					</DiscreteObjectKeyFrame>
+        				</ObjectAnimationUsingKeyFrames>
+        				<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Snapped_Header">
+        					<DiscreteObjectKeyFrame KeyTime="0">
+        						<DiscreteObjectKeyFrame.Value>
+        							<Visibility>Visible</Visibility>
+        						</DiscreteObjectKeyFrame.Value>
+        					</DiscreteObjectKeyFrame>
+        				</ObjectAnimationUsingKeyFrames>
                         <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Snapped_ListView">
         					<DiscreteObjectKeyFrame KeyTime="0">
         						<DiscreteObjectKeyFrame.Value>
@@ -164,11 +147,11 @@
         						</DiscreteObjectKeyFrame.Value>
         					</DiscreteObjectKeyFrame>
         				</ObjectAnimationUsingKeyFrames>-->
-                    </Storyboard>
-                </VisualState>
-
-            </VisualStateGroup>
+        			</Storyboard>
+        		</VisualState>
+                
+        	</VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>
-
+    
 </common:LayoutAwarePage>

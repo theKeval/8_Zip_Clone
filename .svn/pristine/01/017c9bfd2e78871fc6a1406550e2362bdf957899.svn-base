@@ -9,7 +9,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:control="using:_8_Zip.UserControls"
-    xmlns:callisto="using:Callisto.Controls"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -95,21 +94,7 @@
         </GridView>
 
         <control:BusyBar x:Name="isBusy" IsBusy="False" Grid.RowSpan="3" />
-
-        <callisto:CustomDialog x:FieldModifier="public" x:Name="CustomDialogForpassword" 
-                               Title="Enter Password" 
-                               Background="Teal" BackButtonVisibility="Visible" BackButtonClicked="CustomDialogForpassword_BackButtonClicked" Grid.RowSpan="2">
-            <StackPanel>
-                <TextBlock Margin="0,0,0,8" FontSize="14.6667" FontWeight="SemiLight" TextWrapping="Wrap"
-                           Text="The archive you want to open is password protected. Please Enter password." />
-                <callisto:WatermarkTextBox x:Name="tBox_password" HorizontalAlignment="Left" Watermark="Password" Width="400" Height="35" />
-                <StackPanel Margin="0,20,0,0" HorizontalAlignment="Right" Orientation="Horizontal">
-                    <Button Content="OK" Width="90" Margin="0,0,20,0" Click="btnPassOK_Click" />
-                    <Button Content="CANCEL" Width="90" Click="DialogCancelClicked" />
-                </StackPanel>
-            </StackPanel>
-        </callisto:CustomDialog>
-
+        
         <Grid x:Name="Snapped_Header" Visibility="Collapsed">
         	<TextBlock x:Name="pageTitle_Copy" Text="8 Zip Clone" 
         		Style="{StaticResource PageHeaderTextStyle}" HorizontalAlignment="Center" 
