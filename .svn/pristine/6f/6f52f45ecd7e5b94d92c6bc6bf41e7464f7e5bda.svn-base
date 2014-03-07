@@ -1,0 +1,41 @@
+﻿<UserControl
+    x:Class="_8_Zip.UserControls.CompressionOptions"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:_8_Zip.UserControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal" Margin="10 10">
+                <TextBlock Text="Compression Method:" Foreground="Black" FontSize="18" />
+                <ComboBox x:Name="cb_compressionMethod" SelectionChanged="cb_compressionMethod_SelectionChanged"
+                      Margin="30 0 0 0" Width="150" BorderBrush="#CC000000" Style="{StaticResource myComboBox}">
+                    <ComboBoxItem Content="Deflate" IsSelected="True" />
+                    <ComboBoxItem Content="RAR" />
+                    <ComboBoxItem Content="BZip2" />
+                    <ComboBoxItem Content="GZip" />
+                    <ComboBoxItem Content="LZMA" />
+                    <ComboBoxItem Content="BCJ" />
+                    <ComboBoxItem Content="BCJ2" />
+                    <ComboBoxItem Content="PPMD" />
+                </ComboBox>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="10 10">
+                <TextBlock Text="Compression Level:" Foreground="Black" FontSize="18" />
+                <ComboBox x:Name="cb_compressionLevel" SelectionChanged="cb_compressionLevel_SelectionChanged"
+                      Margin="30 0 0 0" Width="150" BorderBrush="#CC000000" Style="{StaticResource myComboBox}">
+                    <ComboBoxItem Content="Default" IsSelected="True" />
+                    <ComboBoxItem Content="Best Compression" />
+                    <ComboBoxItem Content="Best Speed" />
+                    <ComboBoxItem Content="None" />
+                </ComboBox>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

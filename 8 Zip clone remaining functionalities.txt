@@ -1,0 +1,9 @@
+- compression level
+- compression method
+- Encryption
+
+- opened folder name
+- sort by
+- specific file image
+- Display total size
+- total files and folders number

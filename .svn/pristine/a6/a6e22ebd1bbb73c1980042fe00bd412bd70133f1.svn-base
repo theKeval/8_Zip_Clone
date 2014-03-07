@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="f7397463-f585-4151-8361-6d070318aecb" Publisher="CN=Keval.Langalia" Version="1.1.0.8" />
+  <Identity Name="f7397463-f585-4151-8361-6d070318aecb" Publisher="CN=Keval.Langalia" Version="1.1.0.5" />
   <Properties>
-    <DisplayName>RAR Extractor</DisplayName>
+    <DisplayName>8 Zip</DisplayName>
     <PublisherDisplayName>Keval.Langalia</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -15,10 +15,13 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="_8_Zip.App">
-      <VisualElements DisplayName="RAR Extractor" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="RAR Extractor" ForegroundText="light" BackgroundColor="#464646">
+      <VisualElements DisplayName="8 Zip" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="8 Zip" ForegroundText="light" BackgroundColor="#464646">
         <DefaultTile ShowName="allLogos" />
         <SplashScreen Image="Assets\SplashScreen.png" />
       </VisualElements>
     </Application>
   </Applications>
+  <Capabilities>
+    <Capability Name="internetClient" />
+  </Capabilities>
 </Package>
